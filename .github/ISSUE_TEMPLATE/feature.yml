@@ -1,0 +1,17 @@
+name: Feature proposal
+description: Propose a draft-session capability
+title: "[Proposal] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Draft and compatibility boundary
+    validations:
+      required: true

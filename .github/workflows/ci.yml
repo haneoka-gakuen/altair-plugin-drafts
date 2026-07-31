@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: altair-plugin-drafts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out drafts plugin
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: altair-plugin-drafts
+          persist-credentials: false
+
+      - name: Check out Altair
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: haneoka-gakuen/altair
+          path: altair-plugin-drafts/.dependencies/altair
+          persist-credentials: false
+
+      - name: Check out Vega
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: haneoka-gakuen/vega
+          path: altair-plugin-drafts/.dependencies/vega
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: 11.14.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: altair-plugin-drafts/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: altair-plugin-drafts
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vega protocol
+        working-directory: altair-plugin-drafts
+        run: pnpm --filter @haneoka/vega-protocol build
+
+      - name: Build Vega core
+        working-directory: altair-plugin-drafts
+        run: pnpm --filter @haneoka/vega build:core
+
+      - name: Build Altair core
+        working-directory: altair-plugin-drafts
+        run: pnpm --filter @haneoka/altair build:core
+
+      - name: Check package
+        working-directory: altair-plugin-drafts
+        run: pnpm check
+
+      - name: Inspect npm payload
+        working-directory: altair-plugin-drafts
+        run: pnpm pack --dry-run
