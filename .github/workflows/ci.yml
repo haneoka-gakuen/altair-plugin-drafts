@@ -52,7 +52,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: altair-plugin-drafts
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build Vega protocol
         working-directory: altair-plugin-drafts
