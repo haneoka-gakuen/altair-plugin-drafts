@@ -1,7 +1,6 @@
 import type { JsonValue } from "@haneoka/altair/model";
 
-export type AltairDraftConflict =
-  "missing-base" | "project-changed" | "scene-draft-orphaned";
+export type AltairDraftConflict = "missing-base" | "project-changed" | "scene-draft-orphaned";
 
 export interface AltairDraftBase {
   /** Deterministic project source at the moment editing diverged. */
@@ -80,10 +79,7 @@ export interface AltairDraftSession {
   clearProject(): Promise<void>;
   updateScene(update: AltairSceneDraftUpdate): Promise<void>;
   clearScene(sceneId: string): Promise<void>;
-  reconcileScene(
-    sceneId: string,
-    baseline: string,
-  ): Promise<AltairSceneDraftReconciliation>;
+  reconcileScene(sceneId: string, baseline: string): Promise<AltairSceneDraftReconciliation>;
   pending(): AltairDraftPendingStatus;
   status(current: AltairDraftCurrentProject): AltairDraftStatus;
   snapshot(): AltairDraftSessionSnapshot;
@@ -128,13 +124,8 @@ export interface AltairDraftReconciliationHelpers {
     nextValue: string,
     revision: number,
   ): AltairDraftBase | undefined;
-  altairDraftConflict(
-    options: AltairDraftConflictOptions,
-  ): AltairDraftConflict | undefined;
-  hasPendingAltairDrafts(
-    projectDraftPending: boolean,
-    sceneDraftIds: readonly string[],
-  ): boolean;
+  altairDraftConflict(options: AltairDraftConflictOptions): AltairDraftConflict | undefined;
+  hasPendingAltairDrafts(projectDraftPending: boolean, sceneDraftIds: readonly string[]): boolean;
   reconcileAltairSceneDraft<Context>(
     options: AltairSceneDraftReconciliationOptions<Context>,
   ): AltairSceneDraftReconciliationResult<Context>;
@@ -146,14 +137,9 @@ export interface AltairDraftReconciliationHelpers {
     revision: number,
   ): AltairDraftBase | undefined;
   /** Compatibility alias for Altair 0.1 authoring integrations. */
-  storyJsonDraftConflict(
-    options: AltairDraftConflictOptions,
-  ): AltairDraftConflict | undefined;
+  storyJsonDraftConflict(options: AltairDraftConflictOptions): AltairDraftConflict | undefined;
   /** Compatibility alias for Altair 0.1 authoring integrations. */
-  hasPendingStoryCodeDrafts(
-    projectDraftPending: boolean,
-    sceneDraftIds: readonly string[],
-  ): boolean;
+  hasPendingStoryCodeDrafts(projectDraftPending: boolean, sceneDraftIds: readonly string[]): boolean;
   /** Compatibility alias for Altair 0.1 authoring integrations. */
   reconcileStorySceneCodeDraft<Context>(
     options: AltairSceneDraftReconciliationOptions<Context>,
@@ -169,10 +155,7 @@ export interface AltairDraftService extends AltairDraftReconciliationHelpers {
    *
    * `seed` is used only when persistence has no record for this name.
    */
-  open(
-    name: string,
-    seed?: AltairDraftSessionSeed,
-  ): Promise<AltairDraftSession>;
+  open(name: string, seed?: AltairDraftSessionSeed): Promise<AltairDraftSession>;
   get(name: string): AltairDraftSession | undefined;
   names(): readonly string[];
   close(name: string): Promise<boolean>;
@@ -199,18 +182,9 @@ export interface AltairDraftPersistedSession {
 }
 
 export interface AltairDraftPersistence extends AltairDraftPersistenceInfo {
-  load(
-    name: string,
-    request?: AltairDraftPersistenceRequest,
-  ): Promise<AltairDraftPersistedSession | undefined>;
-  save(
-    record: AltairDraftPersistedSession,
-    request: AltairDraftPersistenceMutationRequest,
-  ): Promise<void>;
-  remove(
-    name: string,
-    request: AltairDraftPersistenceMutationRequest,
-  ): Promise<void>;
+  load(name: string, request?: AltairDraftPersistenceRequest): Promise<AltairDraftPersistedSession | undefined>;
+  save(record: AltairDraftPersistedSession, request: AltairDraftPersistenceMutationRequest): Promise<void>;
+  remove(name: string, request: AltairDraftPersistenceMutationRequest): Promise<void>;
   flush?(): Promise<void>;
   dispose?(): Promise<void>;
 }

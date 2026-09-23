@@ -23,14 +23,9 @@ export const altairDraftBaseForValue = (
 /**
  * Detects project and scene conflicts in deterministic recovery order.
  */
-export const altairDraftConflict = (
-  options: AltairDraftConflictOptions,
-): AltairDraftConflict | undefined => {
+export const altairDraftConflict = (options: AltairDraftConflictOptions): AltairDraftConflict | undefined => {
   if (!options.base) return "missing-base";
-  if (
-    options.currentRevision !== options.base.revision ||
-    options.currentSnapshot !== options.base.snapshot
-  ) {
+  if (options.currentRevision !== options.base.revision || options.currentSnapshot !== options.base.snapshot) {
     return "project-changed";
   }
   if (options.nextSceneIds !== undefined && options.sceneDraftIds?.length) {
@@ -42,10 +37,8 @@ export const altairDraftConflict = (
   return undefined;
 };
 
-export const hasPendingAltairDrafts = (
-  projectDraftPending: boolean,
-  sceneDraftIds: readonly string[],
-): boolean => projectDraftPending || sceneDraftIds.length > 0;
+export const hasPendingAltairDrafts = (projectDraftPending: boolean, sceneDraftIds: readonly string[]): boolean =>
+  projectDraftPending || sceneDraftIds.length > 0;
 
 /**
  * Returns a detached scene-draft view and drops an entry once it matches the
